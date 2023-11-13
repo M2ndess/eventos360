@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+*
+{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+:root
+{
+    --main-color: #f0b30f;
+}
+
+.theme-text
+{
+    color: var(--main-color);
+}
+
+.navbar-brand
+{
+    color: var(--main-color) !important;
+}
+
+.act
+{
+    color: var(--main-color) !important;
+    border-bottom: 2px solid var(--main-color);
+}
+
+.navbar ul li a:hover
+{
+    color: var(--main-color) !important;
+    border-bottom: 2px solid var(--main-color);
+}
+
+.header
+{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url(eventos.jpg);
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.wave
+{
+    position: absolute;
+    bottom: 0px;
+}
+
+.middle {
+    height: 80vh;
+    width: 85%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.middle h1 {
+    font-size: 5rem;
+    margin-bottom: 20px; 
+}
+
+.mt-3 {
+    margin-top: 3rem;
+}
+
+.btn-join-now {
+    color: white;
+    background-color: var(--main-color);
+    border: 2px solid;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px; 
+    margin-left: 1%;
+    font-weight: bold;
+}
+
+.btn-join-now:hover {
+    color: #f0b30f;
+}
+
+/* Responsivo para ecrãs mais pequenos */
+@media (max-width: 768px) {
+    .middle {
+        height: auto; 
+        padding: 20px; 
+    }
+
+    .middle h1 {
+        font-size: 2rem;
+    }
+}
