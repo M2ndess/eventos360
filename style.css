@@ -23,7 +23,7 @@
     position: fixed;
     top: 0;
     width: 70%;
-    background-color: transparent !important;
+    background-color: rgb(51, 39, 51) !important;
     z-index: 1000;
 }
 

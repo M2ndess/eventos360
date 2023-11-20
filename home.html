@@ -220,42 +220,6 @@
                     middleSection.style.top = '0';
                 });
             });
-        </script>
-
-        <!-- Script para ajustar a opacidade do título ao fazer scroll -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var middleSection = document.querySelector('.middle');
-                var middleEventosSection = document.querySelector('.middle-eventos');
-                var middleAboutUsSection = document.querySelector('.middle-about-us');
-                var middleContactosSection = document.querySelector('.middle-contact');
-        
-                var sections = [middleSection, middleEventosSection, middleAboutUsSection, middleContactosSection];
-        
-                window.addEventListener('scroll', function () {
-                    sections.forEach(function (section) {
-                        var rect = section.getBoundingClientRect();
-                        var windowHeight = window.innerHeight;
-        
-                        // Ajusta a opacidade com base na posição da seção em relação à janela
-                        var opacityValue = 1 - Math.max(0, Math.min(rect.top, windowHeight) / windowHeight);
-        
-                        // Se a seção atingir o topo ou ultrapassar o topo, diminui a opacidade para 0
-                        if (rect.top <= 0) {
-                            opacityValue = Math.min(1, Math.max(0, 1 + rect.top / (section.offsetHeight / 2)));
-                        }
-        
-                        // Valor entre 0 e 1
-                        opacityValue = Math.min(1, Math.max(0, opacityValue));
-        
-                        section.style.opacity = opacityValue.toString();
-                    });
-                });
-            });
-        </script>
-        
-        
-        
-        
+        </script>        
 </body>
 </html>
