@@ -135,7 +135,58 @@ color: var(--main-color);
 
 .middle-eventos p
 {
-    font-size: 2rem;
+    font-size: 1.2rem;
+    margin-top: 2%;
+    text-align: center;
+    margin-right: 3%;
+    margin-left: 3%;
+}
+
+.middle-eventos h1
+{
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-left: 3%;
+    text-align: left;
+    color: var(--main-color);
+}
+
+.middle-eventos h3
+{
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-left: 3%;
+    margin-right: 3%;
+    text-align: right;
+    color: var(--main-color);
+}
+
+.icon-container 
+{
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    margin-top: 5%;
+}
+
+.icon-container2
+{
+    display: flex;
+    align-items: right;
+    justify-content: right;
+    margin-top: 5%;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Alinha os itens à direita */
+}
+
+.icon-container svg 
+{
+    margin-top: 1%;
+    
 }
 
 .middle-contact
