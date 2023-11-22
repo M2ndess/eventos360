@@ -25,6 +25,7 @@
     width: 70%;
     background-color: rgb(51, 39, 51) !important;
     z-index: 1000;
+    opacity: 80%;
 }
 
 .navbar-brand
@@ -272,6 +273,9 @@ color: var(--main-color);
         width: 96%;
         position: fixed;
         background-color: transparent !important;
+        background-color: rgb(51, 39, 51) !important;
+        z-index: 1000;
+        opacity: 80%;
     }
     .middle 
     {
