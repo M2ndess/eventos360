@@ -1,0 +1,36 @@
+User: 
+	-user_id
+	-username
+	-password
+	-name
+	
+Event:
+	-event_id
+	-name
+	-description
+	-date
+	-location
+	
+Location: 
+	-location_id
+	-name
+	-city
+	-country
+	-street
+	
+Category:
+	-category_id
+	-name
+	-description
+	
+Invitation:
+	-invitation_id
+	-user_id
+	-event_id
+	-status
+	
+Attendance:
+	-attendance_id
+	-user_id
+	-event_id
+	-status
