@@ -8,7 +8,6 @@ session_unset();
 // Destrói a sessão
 session_destroy();
 
-$user_logado = false;
 echo '<script>window.location.replace("/eventos360");</script>';
 exit();
 ?>

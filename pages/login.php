@@ -31,31 +31,43 @@
                     <h1 class="text-white fw-bold display-3" style="text-align: center; margin-top: 20vh; transform: translateY(-50%);">Login</h1>
                     
                     <?php
-                    include '../scripts/connection.php';
+                    
 
+                    include '../scripts/connection.php';
+                    
                     function verificaLogin($mysqli, $username, $password) {
                         // Evitar SQL injection
                         $username = mysqli_real_escape_string($mysqli, $username);
-                        $password = mysqli_real_escape_string($mysqli, $password);
-
-                        $sql = "SELECT * FROM user WHERE username = '$username' AND password = '$password'";
+                    
+                        $sql = "SELECT password FROM user WHERE username = '$username'";
                         $result = $mysqli->query($sql);
-
+                    
                         if ($result->num_rows > 0) {
-                            return true; // Credenciais válidas
+                            $row = $result->fetch_assoc();
+                            $rawPassword = $row['password'];
+                            $hashedPassword = $_POST["password"];
+                            
+                    
+                            // Comparar a senha diretamente (sem usar password_verify)
+                            if (!password_verify($rawPassword, $hashedPassword)) {
+                                return true; // Credenciais válidas
+                            } else {
+                                return false; // Credenciais inválidas
+                            }
                         } else {
-                            return false; // Credenciais inválidas
+                            return false; // Nome de usuário não encontrado
                         }
-                    }
+                    }                    
 
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $username = $_POST["username"];
-                        $password = $_POST["password"];
+                        $hashedPassword = $_POST["password"];
 
-                        if (verificaLogin($mysqli, $username, $password)) {
-                            // Login bem-sucedido, redireciona para a página principal
-                            $user_logado = true;
+                        if (verificaLogin($mysqli, $username, $hashedPassword)) {
+                            // Login bem-sucedido, define a variável de sessão e redireciona para a página principal
+                            $_SESSION['user_id'] = 1; // Substitua 1 pelo ID do usuário real
                             echo '<script>window.location.replace("/eventos360/pages/home.php");</script>';
+                            exit();
                         } else {
                             echo '<p style="color: white; font-weight: bold;" class="error">Credenciais inválidas. Tente novamente.</p>';
                         }
