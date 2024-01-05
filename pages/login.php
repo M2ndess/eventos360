@@ -1,4 +1,7 @@
 <!-- login.php -->
+<?php
+session_start();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -46,16 +49,15 @@
                             $row = $result->fetch_assoc();
                             $rawPassword = $row['password'];
                             $hashedPassword = $_POST["password"];
-                            
                     
                             // Comparar a senha diretamente (sem usar password_verify)
-                            if (!password_verify($rawPassword, $hashedPassword)) {
+                            if (!password_verify($hashedPassword, $rawPassword)) {
                                 return true; // Credenciais válidas
                             } else {
                                 return false; // Credenciais inválidas
                             }
                         } else {
-                            return false; // Nome de usuário não encontrado
+                            return false; // username não encontrado
                         }
                     }                    
 
@@ -64,10 +66,23 @@
                         $hashedPassword = $_POST["password"];
 
                         if (verificaLogin($mysqli, $username, $hashedPassword)) {
-                            // Login bem-sucedido, define a variável de sessão e redireciona para a página principal
-                            $_SESSION['user_id'] = 1; // Substitua 1 pelo ID do usuário real
-                            echo '<script>window.location.replace("/eventos360/pages/home.php");</script>';
-                            exit();
+                            // Recupere o user_id do banco de dados
+                            $sql = "SELECT user_id FROM user WHERE username = '$username'";
+                            $result = $mysqli->query($sql);
+                        
+                            if ($result->num_rows > 0) {
+                                $row = $result->fetch_assoc();
+                                $user_id = $row['user_id'];
+                        
+                                // Agora, defina a variável de sessão
+                                $_SESSION['user_id'] = $user_id;
+                                // Redirecione para a página principal
+                                echo '<script>window.location.replace("/eventos360/pages/home.php");</script>';
+                                exit();
+                            } else {
+                                // Caso não seja possível recuperar o user_id, você pode tratar isso de acordo com sua lógica
+                                echo '<p style="color: white; font-weight: bold;" class="error">Erro ao recuperar informações do usuário.</p>';
+                            }
                         } else {
                             echo '<p style="color: white; font-weight: bold;" class="error">Credenciais inválidas. Tente novamente.</p>';
                         }
