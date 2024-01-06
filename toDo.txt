@@ -1,6 +1,3 @@
-- Adicionar organizador do Evento
-- Botão Não vou
-- Botão Com interesse
 - Adicionar Fotos
 - Adicionar participantes da organização do Evento
 

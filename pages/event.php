@@ -50,6 +50,9 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
                 <!-- Botão para criar um novo evento -->
                 <a href="/eventos360/pages/create_event.php" class="btn btn-primary">Criar Evento</a>
 
+                <!-- Botão para criar editar evento -->
+                <a href="/eventos360/pages/edit_event.php" class="btn btn-primary">Editar Eventos</a>
+
                 <!-- Mostrar lista de eventos -->
                 <div class="event-list">
                     <?php foreach ($events as $event): ?>
