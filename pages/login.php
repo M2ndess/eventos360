@@ -63,7 +63,7 @@ session_start();
 
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $username = $_POST["username"];
-                        $hashedPassword = $_POST["password"];
+                        $hashedPassword = $_POST["password"]; 
 
                         if (verificaLogin($mysqli, $username, $hashedPassword)) {
                             // Recupere o user_id do banco de dados

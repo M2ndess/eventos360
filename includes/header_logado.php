@@ -22,7 +22,7 @@
                                 <a class="nav-link" href="/eventos360/pages/home.php/#sobre">Sobre Nós</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/eventos360/pages/home.php/#eventos">Eventos</a>
+                                <a class="nav-link" href="/eventos360/pages/event.php">Eventos</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/eventos360/pages/home.php/#contactos">Contactos</a>
