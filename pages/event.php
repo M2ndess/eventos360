@@ -70,13 +70,20 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
                                 <!-- Botão para participar ou cancelar participação no evento -->
                                 <form method="post" action="/eventos360/scripts/participate_event.php">
                                     <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
-                                    
-                                    <?php if ($status === 'nao_vou'): ?>
-                                        <!-- Se o usuário não está participando, mostrar o botão "Eu vou" -->
-                                        <button type="submit" class="btn btn-success">Eu vou</button>
-                                    <?php else: ?>
-                                        <!-- Se o usuário já está participando, mostrar o botão "Não vou" -->
-                                        <button type="submit" class="btn btn-danger">Não vou</button>
+
+                                    <?php if ($status === 'vou'): ?>
+                                        <button type="submit" name="action" value="nao_vou" class="btn btn-danger">Não vou</button>
+                                        <button type="submit" name="action" value="com_interesse" class="btn btn-info" <?php echo ($status === 'com_interesse') ? 'disabled' : ''; ?>>Com interesse</button>
+                                    <?php elseif ($status === 'com_interesse'): ?>
+                                        <button type="submit" name="action" value="vou" class="btn btn-success">Eu vou</button>
+                                        <button type="submit" name="action" value="nao_vou" class="btn btn-danger">Não vou</button>
+                                        <button type="submit" name="action" value="com_interesse" class="btn btn-info" <?php echo ($status === 'com_interesse') ? 'disabled' : ''; ?>>Com interesse</button>
+                                    <?php  elseif ($status === 'nao_vou'): ?>
+                                        <button type="submit" name="action" value="vou" class="btn btn-success">Eu vou</button>
+                                        <button type="submit" name="action" value="com_interesse" class="btn btn-info" <?php echo ($status === 'com_interesse') ? 'disabled' : ''; ?>>Com interesse</button>
+                                    <?php  else: ?>
+                                        <button type="submit" name="action" value="vou" class="btn btn-success">Eu vou</button>
+                                        <button type="submit" name="action" value="com_interesse" class="btn btn-info" <?php echo ($status === 'com_interesse') ? 'disabled' : ''; ?>>Com interesse</button>
                                     <?php endif; ?>
                                 </form>
                             </div>
