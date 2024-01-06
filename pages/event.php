@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 include '../scripts/connection.php';
 include '../scripts/participate_event.php';
+include '../scripts/getParticipationStatus.php';
 
 // Obter eventos do banco de dados
 $sql = "SELECT * FROM event";
@@ -52,6 +53,11 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
                 <!-- Mostrar lista de eventos -->
                 <div class="event-list">
                     <?php foreach ($events as $event): ?>
+                        <?php 
+                            $event_id = $event['event_id'];
+                            $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+                            $status = getParticipationStatus($event_id, $user_id);
+                        ?>
                         <div class="event">
                             <div class="event-details-box">
                                 <h3 class="text-white fw-bold"><?php echo "Nome: " . $event['name']; ?></h3>
@@ -61,10 +67,17 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
                                 
                                 <p class="text-white fw-bold">Participantes: <?php echo getParticipantsCount($event['event_id']); ?></p>
 
-                                <!-- Botão para participar do evento -->
+                                <!-- Botão para participar ou cancelar participação no evento -->
                                 <form method="post" action="/eventos360/scripts/participate_event.php">
-                                    <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
-                                    <button type="submit" class="btn btn-success">Eu vou</button>
+                                    <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
+                                    
+                                    <?php if ($status === 'nao_vou'): ?>
+                                        <!-- Se o usuário não está participando, mostrar o botão "Eu vou" -->
+                                        <button type="submit" class="btn btn-success">Eu vou</button>
+                                    <?php else: ?>
+                                        <!-- Se o usuário já está participando, mostrar o botão "Não vou" -->
+                                        <button type="submit" class="btn btn-danger">Não vou</button>
+                                    <?php endif; ?>
                                 </form>
                             </div>
                         </div>
