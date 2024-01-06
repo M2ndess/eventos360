@@ -1,17 +1,15 @@
 <!-- profile.php -->
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /eventos360/pages/login.php");
+    exit();
+}
+?>
 
 <?php
 include '../scripts/connection.php';
-
-// Verificar se o usuário está logado
-// Coloque a lógica adequada para verificar se o usuário está autenticado
-
-// Exemplo: Verifica se a sessão está ativa
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: /eventos360/login.php"); // Redireciona para a página de login
-    exit();
-}
 
 $user_id = $_SESSION['user_id'];
 $sql = "SELECT * FROM user WHERE user_id = $user_id";
@@ -42,27 +40,43 @@ $userData = $result->fetch_assoc();
 
 <body class="body-content">
     <div class="container">
-        <?php include '../includes/header.php'; ?>
+        <?php include '../includes/header_logado.php'; ?>
 
         <section class="profile-section">
             <div class="container">
                 <div class="profile-container">
                     <h1 class="text-white fw-bold display-3" style="text-align: center; margin-top: 20vh; transform: translateY(-50%);">Perfil</h1>
 
-                    <!-- Exibir informações do perfil -->
-                    <p>Nome de Utilizador: <?php echo $userData['username']; ?></p>
-                    <p>Nome: <?php echo $userData['name']; ?></p>
-                    <p>Email: <?php echo $userData['email']; ?></p>
-
                     <!-- Formulário de edição de dados -->
-                    <form method="post" action="update_profile.php">
+                    <form method="post" action="../scripts/update_profile.php">
+
                         <div class="form-group">
-                            <label for="new_password">Nova Palavra-Passe</label>
+                            <label style="color: white; font-weight: bold;" for="new_username">Novo Nome de Utilizador</label>
+                            <input type="text" id="new_username" name="new_username" class="form-control" value="<?php echo $userData['username']; ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label style="color: white; font-weight: bold; padding-top: 2vh;" for="new_name">Novo Nome</label>
+                            <input type="text" id="new_name" name="new_name" class="form-control" value="<?php echo $userData['name']; ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label style="color: white; font-weight: bold; padding-top: 2vh;" for="new_email">Novo Email</label>
+                            <input type="email" id="new_email" name="new_email" class="form-control" value="<?php echo $userData['email']; ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label style="color: white; font-weight: bold; padding-top: 2vh;" for="current_password">Senha Atual</label>
+                            <input type="password" id="current_password" name="current_password" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label style="color: white; font-weight: bold; padding-top: 2vh;" for="new_password">Nova Palavra-Passe</label>
                             <input type="password" id="new_password" name="new_password" class="form-control">
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Atualizar Perfil</button>
+                            <button style="margin-top: 2vh;" type="submit" class="btn btn-primary">Atualizar Perfil</button>
                         </div>
                     </form>
                 </div>
