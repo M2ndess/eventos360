@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 include '../scripts/connection.php';
+include '../scripts/participate_event.php';
 
 // Obter eventos do banco de dados
 $sql = "SELECT * FROM event";
@@ -44,23 +45,31 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
         <section class="events-section">
             <div class="container">
                 <h1 class="text-white fw-bold display-3" style="text-align: center; margin-top: 20vh; transform: translateY(-50%);">Eventos</h1>
+                
+                <!-- Botão para criar um novo evento -->
+                <a href="/eventos360/pages/create_event.php" class="btn btn-primary">Criar Evento</a>
 
                 <!-- Mostrar lista de eventos -->
                 <div class="event-list">
                     <?php foreach ($events as $event): ?>
                         <div class="event">
-                            <h3><?php echo $event['title']; ?></h3>
-                            <p><?php echo $event['description']; ?></p>
-                            <p>Data: <?php echo $event['date']; ?></p>
-                            <!-- Adicione mais detalhes conforme necessário -->
+                            <div class="event-details-box">
+                                <h3 class="text-white fw-bold"><?php echo "Nome: " . $event['name']; ?></h3>
+                                <p class="text-white fw-bold">Descrição: <?php echo $event['description']; ?></p>
+                                <p class="text-white fw-bold">Data: <?php echo $event['date']; ?></p>
+                                <p class="text-white fw-bold">Localização: <?php echo $event['location']; ?></p>
+                                
+                                <p class="text-white fw-bold">Participantes: <?php echo getParticipantsCount($event['event_id']); ?></p>
 
-                            <!-- Adicione um botão para participar do evento, se necessário -->
+                                <!-- Botão para participar do evento -->
+                                <form method="post" action="/eventos360/scripts/participate_event.php">
+                                    <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
+                                    <button type="submit" class="btn btn-success">Eu vou</button>
+                                </form>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
-
-                <!-- Botão para criar um novo evento -->
-                <a href="/eventos360/pages/create_event.php" class="btn btn-primary">Criar Evento</a>
             </div>
         </section>
     </div>
