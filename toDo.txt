@@ -1,0 +1,12 @@
+- Adicionar organizador do Evento
+- Botão Não vou
+- Botão Com interesse
+- Adicionar Fotos
+- Adicionar participantes da organização do Evento
+
+- Adicionar Categorias 
+- Adicionar Partilha de Eventos
+
+- Filtros (Nome, Categoria, Região, Data)
+
+- Adicionar métodos para os organizadores poderem consultar participantes, alterar dados do evento, e remover participantes

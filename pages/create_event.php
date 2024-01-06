@@ -30,9 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Inserir o evento no banco de dados
-    $sql_insert_event = "INSERT INTO event (name, description, date, location) VALUES (?, ?, ?, ?)";
+    $sql_insert_event = "INSERT INTO event (name, description, date, location, user_id) VALUES (?, ?, ?, ?, ?)";
     $stmt_insert_event = $mysqli->prepare($sql_insert_event);
-    $stmt_insert_event->bind_param("ssss", $eventName, $eventDescription, $eventDate, $eventLocation);
+    $stmt_insert_event->bind_param("ssssi", $eventName, $eventDescription, $eventDate, $eventLocation, $_SESSION['user_id']);    
 
     if ($stmt_insert_event->execute()) {
         // Evento criado com sucesso, redirecionar para a página de eventos
