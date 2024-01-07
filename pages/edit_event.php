@@ -89,9 +89,7 @@ $userEvents = $result->fetch_all(MYSQLI_ASSOC);
 
                                     // Exiba a lista de colaboradores apenas se houver algum
                                     if (!empty($collaborator_names)) {
-                                        echo '<p class="text-white fw-bold">Colaboradores:</p>';
-                                        $collaborators_string = implode(', ', $collaborator_names);
-                                        echo '<p class="text-white">' . $collaborators_string . '</p>';
+                                        echo '<p class="text-white fw-bold">Colaboradores: ' . implode(', ', $collaborator_names) . '</p>';
                                     }
                                     ?>
 
@@ -100,6 +98,7 @@ $userEvents = $result->fetch_all(MYSQLI_ASSOC);
                                         <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
 
                                         <a href="/eventos360/pages/edit_single_event.php?event_id=<?php echo $event_id; ?>" class="btn btn-primary">Editar</a>
+                                        <a href="/eventos360/pages/details.php?event_id=<?php echo $event_id; ?>" class="btn btn-primary">Consultar Detalhes</a>
                                     </form>
                                 </div>
                             </div>

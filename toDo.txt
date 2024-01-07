@@ -1,9 +1,8 @@
 - Adicionar Fotos
-- Adicionar participantes da organização do Evento
 
-- Adicionar Categorias 
+- Adicionar Categorias
 - Adicionar Partilha de Eventos
 
 - Filtros (Nome, Categoria, Região, Data)
 
-- Adicionar métodos para os organizadores poderem consultar participantes, alterar dados do evento, e remover participantes
+- Adicionar métodos para os organizadores poderem consultar participantes, e remover participantes
