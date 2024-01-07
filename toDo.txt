@@ -4,5 +4,3 @@
 - Adicionar Partilha de Eventos
 
 - Filtros (Nome, Categoria, Região, Data)
-
-- Adicionar métodos para os organizadores poderem consultar participantes, e remover participantes

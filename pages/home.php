@@ -125,7 +125,7 @@ if (!isset($_SESSION['user_id'])) {
                     </form>
                 </div>
                     <!-- Footer -->
-                    <?php include 'includes/footer.php'; ?>
+                    <?php include '../includes/footer.php'; ?>
             </div>
     </section>
 

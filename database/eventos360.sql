@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 06-Jan-2024 às 12:36
+-- Tempo de geração: 07-Jan-2024 às 19:33
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -31,8 +31,17 @@ CREATE TABLE `attendance` (
   `attendance_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `event_id` int(11) NOT NULL,
-  `status` int(11) NOT NULL
+  `status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `attendance`
+--
+
+INSERT INTO `attendance` (`attendance_id`, `user_id`, `event_id`, `status`) VALUES
+(109, 17, 16, 'vou'),
+(110, 18, 16, 'vou'),
+(111, 18, 18, 'com_interesse');
 
 -- --------------------------------------------------------
 
@@ -57,8 +66,36 @@ CREATE TABLE `event` (
   `name` varchar(50) NOT NULL,
   `description` varchar(200) NOT NULL,
   `date` date NOT NULL,
-  `location` varchar(50) NOT NULL
+  `location` varchar(50) NOT NULL,
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `event`
+--
+
+INSERT INTO `event` (`event_id`, `name`, `description`, `date`, `location`, `user_id`) VALUES
+(16, 'teste3', 'teste teste', '2025-11-11', 'viana do castelo', 17),
+(18, 'a', 'a', '2222-11-11', '1', 17);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `event_users`
+--
+
+CREATE TABLE `event_users` (
+  `event_user_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `event_users`
+--
+
+INSERT INTO `event_users` (`event_user_id`, `user_id`, `event_id`) VALUES
+(22, 1, 16);
 
 -- --------------------------------------------------------
 
@@ -133,7 +170,16 @@ ALTER TABLE `category`
 -- Índices para tabela `event`
 --
 ALTER TABLE `event`
-  ADD PRIMARY KEY (`event_id`);
+  ADD PRIMARY KEY (`event_id`),
+  ADD KEY `user_id_fk_3` (`user_id`);
+
+--
+-- Índices para tabela `event_users`
+--
+ALTER TABLE `event_users`
+  ADD PRIMARY KEY (`event_user_id`),
+  ADD KEY `event_id_fk_3` (`event_id`),
+  ADD KEY `user_id_fk_4` (`user_id`);
 
 --
 -- Índices para tabela `invitation`
@@ -162,6 +208,12 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT de tabela `attendance`
+--
+ALTER TABLE `attendance`
+  MODIFY `attendance_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+
+--
 -- AUTO_INCREMENT de tabela `category`
 --
 ALTER TABLE `category`
@@ -171,7 +223,13 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT de tabela `event`
 --
 ALTER TABLE `event`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT de tabela `event_users`
+--
+ALTER TABLE `event_users`
+  MODIFY `event_user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de tabela `invitation`
@@ -201,6 +259,19 @@ ALTER TABLE `user`
 ALTER TABLE `attendance`
   ADD CONSTRAINT `event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`),
   ADD CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
+
+--
+-- Limitadores para a tabela `event`
+--
+ALTER TABLE `event`
+  ADD CONSTRAINT `user_id_fk_3` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
+
+--
+-- Limitadores para a tabela `event_users`
+--
+ALTER TABLE `event_users`
+  ADD CONSTRAINT `event_id_fk_3` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`),
+  ADD CONSTRAINT `user_id_fk_4` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 
 --
 -- Limitadores para a tabela `invitation`
