@@ -68,10 +68,17 @@ if (isset($_GET['event_id'])) {
             <div class="container">
                 <div class="edit-event-container">
                     <h1 class="text-white fw-bold display-3" style="text-align: center; margin-top: 20vh; transform: translateY(-50%);">Editar Evento</h1>
-
+                    <!-- Botão para voltar -->
+                    <a href="/eventos360/pages/edit_event.php" class="btn btn-primary" style="margin-bottom: 2vh">Voltar</a>
                     <!-- Formulário de edição de eventos -->
                     <form method="post" action="/eventos360/scripts/edit_event.php">
                         <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
+
+                        <!-- Botão para adicionar colaborador -->
+                        <a href="/eventos360/pages/add_user.php?event_id=<?php echo $event_id; ?>" class="btn btn-primary">Adicionar Colaborador</a>
+
+                        <!-- Botão para remover colaborador -->
+                        <a href="/eventos360/pages/remove_user.php?event_id=<?php echo $event_id; ?>" class="btn btn-primary">Remover Colaborador</a>
 
                         <div class="form-group">
                             <label style="color: white; font-weight: bold;" for="event_name">Nome</label>

@@ -68,7 +68,32 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
                                 <p class="text-white fw-bold">Data: <?php echo $event['date']; ?></p>
                                 <p class="text-white fw-bold">Localização: <?php echo $event['location']; ?></p>
                                 
-                                <p class="text-white fw-bold">Participantes: <?php echo getParticipantsCount($event['event_id']); ?></p>
+                                <p class="text-white fw-bold">Participantes: <?php echo getParticipantsCount($event_id); ?></p>
+
+                                <!-- Lista de colaboradores -->
+                                <?php
+                                // Consulta para obter colaboradores do evento
+                                $sql_collaborators = "SELECT user.username FROM user INNER JOIN event_users ON user.user_id = event_users.user_id WHERE event_users.event_id = ?";
+                                $stmt_collaborators = $mysqli->prepare($sql_collaborators);
+                                $stmt_collaborators->bind_param("i", $event_id);
+                                $stmt_collaborators->execute();
+                                $result_collaborators = $stmt_collaborators->get_result();
+
+                                // Array para armazenar os nomes dos colaboradores
+                                $collaborator_names = [];
+
+                                while ($collaborator = $result_collaborators->fetch_assoc()) {
+                                    $collaborator_names[] = $collaborator['username'];
+                                }
+
+                                // Feche o statement de colaboradores
+                                $stmt_collaborators->close();
+
+                                // Exiba a lista de colaboradores apenas se houver algum
+                                if (!empty($collaborator_names)) {
+                                    echo '<p class="text-white fw-bold">Colaboradores: ' . implode(', ', $collaborator_names) . '</p>';
+                                }
+                                ?>
 
                                 <!-- Botão para participar ou cancelar participação no evento -->
                                 <form method="post" action="/eventos360/scripts/participate_event.php">
