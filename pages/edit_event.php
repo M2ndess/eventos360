@@ -30,6 +30,12 @@ $userEvents = $result->fetch_all(MYSQLI_ASSOC);
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JavaScript (bundle includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.js" integrity="sha384-e5iqk60l8jN+gbHlDL1e9a5UXDIIl4/RNAwyPdHY4OJWUG95IwZ+VA3WEnDOmI0T" crossorigin="anonymous"></script>
 
     <!-- Linkar CSS File -->
     <style>
@@ -104,12 +110,12 @@ $userEvents = $result->fetch_all(MYSQLI_ASSOC);
                                     }
                                     ?>
 
-                                    <!-- Botão para participar ou cancelar participação no evento -->
-                                    <form method="post" action="/eventos360/scripts/participate_event.php">
-                                        <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
+                                    <a href="/eventos360/pages/edit_single_event.php?event_id=<?php echo $event_id; ?>" class="btn btn-primary">Editar</a>
+                                    <a href="/eventos360/pages/details.php?event_id=<?php echo $event_id; ?>" class="btn btn-primary">Consultar Detalhes</a>
 
-                                        <a href="/eventos360/pages/edit_single_event.php?event_id=<?php echo $event_id; ?>" class="btn btn-primary">Editar</a>
-                                        <a href="/eventos360/pages/details.php?event_id=<?php echo $event_id; ?>" class="btn btn-primary">Consultar Detalhes</a>
+                                    <form method="POST" action="/eventos360/scripts/remove_event.php">
+                                        <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
+                                        <button style="margin-top: 1vh;" type="submit" name="remove_event_<?php echo $event_id; ?>" class="btn btn-danger">Remover Evento</button>
                                     </form>
                                 </div>
                             </div>

@@ -1,6 +1,5 @@
 - Adicionar Fotos
 
-- Adicionar Categorias
 - Adicionar Partilha de Eventos
 
 - Filtros (Nome, Categoria, Região, Data)
