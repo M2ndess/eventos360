@@ -15,6 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $eventDescription = $_POST["event_description"];
     $eventDate = $_POST["event_date"];
     $eventLocation = $_POST["event_location"];
+    $eventCategory = $_POST["event_category"];
 
     // Verifique se a data do evento é posterior à data atual
     $currentDate = date("Y-m-d");
@@ -30,9 +31,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Inserir o evento no banco de dados
-    $sql_insert_event = "INSERT INTO event (name, description, date, location, user_id) VALUES (?, ?, ?, ?, ?)";
+    $sql_insert_event = "INSERT INTO event (name, description, date, location, user_id, category_id) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt_insert_event = $mysqli->prepare($sql_insert_event);
-    $stmt_insert_event->bind_param("ssssi", $eventName, $eventDescription, $eventDate, $eventLocation, $_SESSION['user_id']);    
+    $stmt_insert_event->bind_param("ssssii", $eventName, $eventDescription, $eventDate, $eventLocation, $_SESSION['user_id'], $eventCategory);    
 
     if ($stmt_insert_event->execute()) {
         // Evento criado com sucesso, redirecionar para a página de eventos
@@ -77,7 +78,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="container">
                 <div class="create-event-container">
                     <h1 class="text-white fw-bold display-3" style="text-align: center; margin-top: 20vh; transform: translateY(-50%);">Criar Evento</h1>
-
+                    <!-- Botão para voltar -->
+                    <a href="/eventos360/pages/event.php" class="btn btn-primary" style="margin-bottom: 2vh">Voltar</a>
                     <!-- Formulário de criação de eventos -->
                     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                         <?php
@@ -104,6 +106,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="form-group">
                             <label style="color: white; font-weight: bold; padding-top: 2vh;" for="event_location">Localização do Evento</label>
                             <input type="text" id="event_location" name="event_location" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label style="color: white; font-weight: bold; padding-top: 2vh;" for="event_category">Categoria do Evento</label>
+                            <select id="event_category" name="event_category" class="form-control" required>
+                                <?php
+                                // Consultar categorias existentes na bd
+                                $sql_select_categories = "SELECT category_id, name FROM category";
+                                $result_categories = $mysqli->query($sql_select_categories);
+
+                                // Adicionar as opções da dropdown
+                                while ($row_category = $result_categories->fetch_assoc()) {
+                                    echo '<option value="' . $row_category['category_id'] . '">' . $row_category['name'] . '</option>';
+                                }
+                                ?>
+                            </select>
+
+                            <div class="form-group">
+                                <a style= "margin-top: 1vh;" href="/eventos360/pages/create_category.php" class="btn btn-success">Criar Nova Categoria</a>
+                            </div>
                         </div>
 
                         <div class="form-group">

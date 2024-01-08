@@ -101,6 +101,23 @@ if (isset($_GET['event_id'])) {
                         </div>
 
                         <div class="form-group">
+                            <label style="color: white; font-weight: bold; padding-top: 2vh;" for="event_category">Categoria</label>
+                            <select id="event_category" name="event_category" class="form-control" required>
+                                <?php
+                                // Consultar categorias existentes na bd
+                                $sql_select_categories = "SELECT category_id, name FROM category";
+                                $result_categories = $mysqli->query($sql_select_categories);
+
+                                // Adicionar as opções da dropdown
+                                while ($row_category = $result_categories->fetch_assoc()) {
+                                    $selected = ($row_category['category_id'] == $event['category_id']) ? 'selected' : '';
+                                    echo '<option value="' . $row_category['category_id'] . '" ' . $selected . '>' . $row_category['name'] . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <button style="margin-top: 2vh;" type="submit" class="btn btn-primary">Guardar Alterações</button>
                         </div>
                     </form>

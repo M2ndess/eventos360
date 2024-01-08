@@ -16,6 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $eventDescription = $_POST["event_description"];
     $eventDate = $_POST["event_date"];
     $eventLocation = $_POST["event_location"];
+    $eventCategory = $_POST["event_category"];
 
     // Verificar se a data do evento é posterior à data atual
     $currentDate = date("Y-m-d");
@@ -30,9 +31,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Atualizar o evento no banco de dados
-    $sql_update_event = "UPDATE event SET name = ?, description = ?, date = ?, location = ? WHERE event_id = ?";
+    $sql_update_event = "UPDATE event SET name = ?, description = ?, date = ?, location = ?, category_id = ? WHERE event_id = ?";
     $stmt_update_event = $mysqli->prepare($sql_update_event);
-    $stmt_update_event->bind_param("ssssi", $eventName, $eventDescription, $eventDate, $eventLocation, $event_id);
+    $stmt_update_event->bind_param("ssssii", $eventName, $eventDescription, $eventDate, $eventLocation, $eventCategory, $event_id);
 
     if ($stmt_update_event->execute()) {
         // Evento atualizado com sucesso, redirecionar para a página de eventos

@@ -58,6 +58,16 @@ $userEvents = $result->fetch_all(MYSQLI_ASSOC);
                             <?php 
                                 $event_id = $event['event_id'];
                                 $status = getParticipationStatus($event_id, $user_id);
+                                $categoryId = $event['category_id'];
+
+                                // Consulta SQL para obter o nome da categoria
+                                $sql_category_name = "SELECT name FROM category WHERE category_id = ?";
+                                $stmt_category_name = $mysqli->prepare($sql_category_name);
+                                $stmt_category_name->bind_param("i", $categoryId); 
+                                $stmt_category_name->execute();
+                                $stmt_category_name->bind_result($categoryName);
+                                $stmt_category_name->fetch();
+                                $stmt_category_name->close();
                             ?>
                             <div class="event">
                                 <div class="event-details-box">
@@ -65,6 +75,7 @@ $userEvents = $result->fetch_all(MYSQLI_ASSOC);
                                     <p class="text-white fw-bold">Descrição: <?php echo $event['description']; ?></p>
                                     <p class="text-white fw-bold">Data: <?php echo $event['date']; ?></p>
                                     <p class="text-white fw-bold">Localização: <?php echo $event['location']; ?></p>
+                                    <p class="text-white fw-bold">Categoria: <?php echo $categoryName; ?></p>
                                     
                                     <p class="text-white fw-bold">Participantes: <?php echo getParticipantsCount($event['event_id']); ?></p>
 
