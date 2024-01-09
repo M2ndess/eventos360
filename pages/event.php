@@ -46,15 +46,82 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
         <section class="events-section">
             <div class="container">
                 <h1 class="text-white fw-bold display-3" style="text-align: center; margin-top: 20vh; transform: translateY(-50%);">Eventos</h1>
-                
+
+                <form action="" method="GET">
+                    <button style="margin-bottom: 1vh;" type="button" class="btn btn-primary" onclick="toggleFilters()">Mostrar Filtros</button>
+                    
+                    <div id="filter-box" style="display: none;">
+                        <div class="mb-3">
+                            <label for="search" class="form-label text-white fw-bold">Pesquisar por nome:</label>
+                            <input type="text" class="form-control" id="search" name="search">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="category" class="form-label text-white fw-bold">Filtrar por categoria:</label>
+                            <select class="form-select" id="category" name="category">
+                                <option value="">Todas as categorias</option>
+                                <?php
+                                    // Consulta SQL para obter as categorias
+                                    $sql_categories = "SELECT * FROM category";
+                                    $result_categories = $mysqli->query($sql_categories);
+                                    $categories = $result_categories->fetch_all(MYSQLI_ASSOC);
+
+                                    foreach ($categories as $category) {
+                                        echo '<option value="' . $category['category_id'] . '">' . $category['name'] . '</option>';
+                                    }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="region" class="form-label text-white fw-bold">Filtrar por região:</label>
+                            <input type="text" class="form-control" id="region" name="region">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="date" class="form-label text-white fw-bold">Filtrar por data:</label>
+                            <input type="date" class="form-control" id="date" name="date">
+                        </div>
+                        
+                        <button style="margin-bottom: 1vh;" type="submit" class="btn btn-primary">Filtrar</button>
+                    </div>
+
+                    <!-- Botão para resetar os filtros -->
+                    <a href="/eventos360/pages/event.php" style="margin-bottom: 1vh;" class="btn btn-secondary">Limpar Filtros</a>
+                </form>
+
                 <!-- Botão para criar um novo evento -->
                 <a href="/eventos360/pages/create_event.php" class="btn btn-primary">Criar Evento</a>
 
                 <!-- Botão para criar editar evento -->
                 <a href="/eventos360/pages/edit_event.php" class="btn btn-primary">Editar Eventos</a>
-
+                
                 <!-- Mostrar lista de eventos -->
                 <div class="event-list">
+                <?php
+                        // Construir a query SQL baseada nos filtros
+                        $sql = "SELECT * FROM event WHERE 1";
+                        if (isset($_GET['search']) && !empty($_GET['search'])) {
+                            $search = $mysqli->real_escape_string($_GET['search']);
+                            $sql .= " AND name LIKE '%$search%'";
+                        }
+                        if (isset($_GET['category']) && !empty($_GET['category'])) {
+                            $categoryFilter = $mysqli->real_escape_string($_GET['category']);
+                            $sql .= " AND category_id = '$categoryFilter'";
+                        }
+                        if (isset($_GET['region']) && !empty($_GET['region'])) {
+                            $region = $mysqli->real_escape_string($_GET['region']);
+                            $sql .= " AND location LIKE '%$region%'";
+                        }
+                        if (isset($_GET['date']) && !empty($_GET['date'])) {
+                            $date = $mysqli->real_escape_string($_GET['date']);
+                            $sql .= " AND date = '$date'";
+                        }
+
+                        $result = $mysqli->query($sql);
+                        $events = $result->fetch_all(MYSQLI_ASSOC);
+                    ?>
+
                     <?php foreach ($events as $event): ?>
                         <?php 
                             $event_id = $event['event_id'];
@@ -144,6 +211,22 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
         var shareURL = 'http://localhost/eventos360/pages/shared_event.php?event_id=' + encodeURIComponent(eventId);
         
         window.open(shareURL, '_blank');
+    }
+</script>
+
+<!-- JavaScript para mostrar/ocultar os filtros -->
+<script>
+    function toggleFilters() {
+        var filterBox = document.getElementById('filter-box');
+        var filterButton = document.getElementById('filter-button');
+
+        if (filterBox.style.display === 'none') {
+            filterBox.style.display = 'block';
+            filterButton.innerText = 'Ocultar Filtros';
+        } else {
+            filterBox.style.display = 'none';
+            filterButton.innerText = 'Mostrar Filtros';
+        }
     }
 </script>
 
