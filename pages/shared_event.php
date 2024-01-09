@@ -71,7 +71,8 @@ if ($result_event_details->num_rows > 0) {
         <section class="events-section">
             <div class="container">
                 <h1 class="text-white fw-bold display-3" style="text-align: center; margin-top: 20vh; transform: translateY(-50%);">Detalhes do Evento Compartilhado</h1>
-
+                <!-- Botão para voltar -->
+                <a href="/eventos360/pages/event.php" class="btn btn-primary" style="margin-bottom: 2vh">Voltar</a>
                 <!-- Mostrar detalhes do evento compartilhado -->
                 <div class="event-details">
                     <div class="event-details-box">
