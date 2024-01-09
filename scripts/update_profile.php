@@ -17,48 +17,41 @@ $result_check_password = $stmt_check_password->get_result();
 
 if ($result_check_password->num_rows > 0) {
     $row = $result_check_password->fetch_assoc();
-    $rawPassword = $row['password'];
+    $hashedPassword = $row['password'];
 
     // Comparar a senha diretamente (sem usar password_verify)
-    if (!password_verify($current_password, $rawPassword)) {
-        // Senha atual incorreta
-        echo "Senha atual incorreta.";
-        echo "$rawPassword";
-        echo "///";
-        echo "$current_password";
-    } else {
-        // Senha atual está correta, proceda com a atualização do perfil
+    if (password_verify($current_password, $hashedPassword)) {
 
+        // Senha atual está correta, proceda com a atualização do perfil
         $sql_update_profile = "UPDATE user SET ";
         $sql_update_profile .= "username = ?, ";
         $sql_update_profile .= "name = ?, ";
         $sql_update_profile .= "email = ?";
-
-        // Verifique se a nova senha está sendo alterada
+        
+        // Check if the new password is being updated
         if (!empty($new_password)) {
             $new_password_hash = password_hash($new_password, PASSWORD_DEFAULT);
             $sql_update_profile .= ", password = ?";
         }
-
+        
         $sql_update_profile .= " WHERE user_id = ?";
-
-        // Use um prepared statement para a atualização
+        
+        // Use a prepared statement for the update
         $stmt_update_profile = $mysqli->prepare($sql_update_profile);
-        $stmt_update_profile->bind_param("sss", $_POST['new_username'], $_POST['new_name'], $_POST['new_email']);
-
+        
+        // Bind parameters based on whether the password is being updated
         if (!empty($new_password)) {
-            // Se a nova senha estiver sendo alterada, use a versão hash da nova senha
-            $stmt_update_profile->bind_param("s", $new_password_hash);
+            $stmt_update_profile->bind_param("ssssi", $_POST['new_username'], $_POST['new_name'], $_POST['new_email'], $new_password_hash, $user_id);
+        } else {
+            $stmt_update_profile->bind_param("sssi", $_POST['new_username'], $_POST['new_name'], $_POST['new_email'], $user_id);
         }
-
-        $stmt_update_profile->bind_param("i", $user_id);
-
-        // Execute a atualização
+        
+        // Execute the update
         $result_update_profile = $stmt_update_profile->execute();
 
         if ($result_update_profile) {
             // Atualização bem-sucedida
-            header("Location: /eventos360/profile.php");
+            header("Location: /eventos360/pages/profile.php");
             exit();
         } else {
             // Erro na atualização
@@ -67,6 +60,9 @@ if ($result_check_password->num_rows > 0) {
 
         // Feche o statement de atualização
         $stmt_update_profile->close();
+    } else {
+        // Senha atual incorreta
+        echo "Senha atual incorreta. Senha fornecida: $current_password, Senha do banco de dados: $hashedPassword";
     }
 } else {
     // Usuário não encontrado ou erro ao executar a consulta

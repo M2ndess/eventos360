@@ -41,17 +41,18 @@ session_start();
                     function verificaLogin($mysqli, $username, $password) {
                         // Evitar SQL injection
                         $username = mysqli_real_escape_string($mysqli, $username);
-                    
-                        $sql = "SELECT password FROM user WHERE username = '$username'";
-                        $result = $mysqli->query($sql);
-                    
+
+                        $sql = "SELECT user_id, password FROM user WHERE username = ?";
+                        $stmt = $mysqli->prepare($sql);
+                        $stmt->bind_param("s", $username);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+
                         if ($result->num_rows > 0) {
                             $row = $result->fetch_assoc();
-                            $rawPassword = $row['password'];
-                            $hashedPassword = $_POST["password"];
+                            $hashedPasswordFromDB = $row['password'];
                     
-                            // Comparar a senha diretamente (sem usar password_verify)
-                            if (!password_verify($hashedPassword, $rawPassword)) {
+                            if (password_verify($password, $hashedPasswordFromDB)) {
                                 return true; // Credenciais válidas
                             } else {
                                 return false; // Credenciais inválidas
