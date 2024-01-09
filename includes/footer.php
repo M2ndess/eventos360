@@ -5,11 +5,11 @@
         <div class="col-md-6">
             <h4>Links Rápidos</h4>
             <ul class="list-unstyled">
-                <li><a href="#">Home</a></li>
-                <li><a href="#sobre">Sobre Nós</a></li>
-                <li><a href="#">Eventos</a></li>
-                <li><a href="#contactos">Contactos</a></li>
-                <li><a href="#">Entrar</a></li>
+                <li><a href="/eventos360">Home</a></li>
+                <li><a href="/eventos360/#sobre">Sobre Nós</a></li>
+                <li><a href="/eventos360/#eventos">Eventos</a></li>
+                <li><a href="/eventos360/#contatctos">Contactos</a></li>
+                <li><a href="/eventos360/pages/login.php">Entrar</a></li>
             </ul>
         </div>
         <div class="col-md-6">
