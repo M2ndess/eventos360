@@ -70,7 +70,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt_insert_image->close();
             } else {
                 // Tratar erro no upload da imagem
-                $errorMessage = "Erro ao fazer upload da imagem.";
                 $_SESSION['error_message'] = $errorMessage;
                 header("Location: /eventos360/pages/create_event.php");
                 exit();

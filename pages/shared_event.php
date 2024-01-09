@@ -42,6 +42,26 @@ if ($result_event_details->num_rows > 0) {
     header("Location: /eventos360/pages/events.php");
     exit();
 }
+
+// SQL query to retrieve image information
+$sql_image_info = "SELECT image_id, url FROM images WHERE image_id = ?";
+$stmt_image_info = $mysqli->prepare($sql_image_info);
+$stmt_image_info->bind_param("i", $eventDetails['image_id']);
+$stmt_image_info->execute();
+$result_image_info = $stmt_image_info->get_result();
+
+// Fetch image details
+if ($result_image_info->num_rows > 0) {
+    $imageInfo = $result_image_info->fetch_assoc();
+    $imageId = $imageInfo['image_id'];
+    $imageUrl = $imageInfo['url'];
+} else {
+    $imageId = null;
+    $imageUrl = null;
+}
+
+// Close the statement
+$stmt_image_info->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -107,6 +127,15 @@ if ($result_event_details->num_rows > 0) {
                             echo '<p class="text-white fw-bold">Colaboradores: ' . implode(', ', $collaborator_names) . '</p>';
                         }
                         ?>
+
+                        <!-- Display the image if it exists -->
+                        <?php if ($imageId && $imageUrl): ?>
+                            <div class="event-details-box">
+                                <!-- ... (other details) ... -->
+                                <!-- Display the image -->
+                                <img src="/eventos360/uploads/<?php echo $imageUrl; ?>" alt="Event Image" style="max-width: 30%; height: auto;">
+                            </div>
+                        <?php endif; ?>
 
                         <!-- Botões para participar ou cancelar participação no evento -->
                         <form method="post" action="/eventos360/scripts/participate_event.php">
