@@ -24,6 +24,20 @@ if (isset($_GET['event_id'])) {
 
     $stmt_get_event->close();
 
+    // Obter dados do evento do banco de dados
+    $sql_get_event = "SELECT event.*, images.url AS image_path 
+                    FROM event 
+                    LEFT JOIN images ON event.image_id = images.image_id 
+                    WHERE event.event_id = ?";
+    $stmt_get_event = $mysqli->prepare($sql_get_event);
+    $stmt_get_event->bind_param("i", $event_id);
+
+    $stmt_get_event->execute();
+    $result = $stmt_get_event->get_result();
+    $event = $result->fetch_assoc();
+
+    $stmt_get_event->close();
+
     // Verificar se o evento pertence ao usuário logado
     if ($event['user_id'] != $_SESSION['user_id']) {
         // O evento não pertence ao usuário logado, redirecionar para uma página de erro ou eventos
@@ -35,6 +49,8 @@ if (isset($_GET['event_id'])) {
     header("Location: /eventos360/pages/error.php");
     exit();
 }
+
+
 
 // Restante do código para a edição do evento...
 ?>
@@ -117,6 +133,27 @@ if (isset($_GET['event_id'])) {
                             </select>
                         </div>
 
+                        <!-- Adicionar campo de upload de imagem -->
+                        <div class="form-group">
+                            <label style="color: white; font-weight: bold; padding-top: 2vh;" for="event_image">Imagem do Evento</label>
+                            <input type="file" id="event_image" name="event_image" accept="image/*" class="form-control">
+                        </div>
+
+                        <!-- Adicionar botão para remover imagem -->
+                        <div class="form-group">
+                            <label style="color: white; font-weight: bold; padding-top: 2vh;">Imagem Atual</label>
+                            <?php
+                            if (!empty($event['image_path'])) {
+                                echo '<img src="/eventos360/uploads/' . $event['image_path'] . '" alt="Imagem Atual" style="max-width: 30%; height: auto; margin-left: 3vh; margin-right: 3vh;">';
+                                echo '<button style="margin-top: 2vh;" type="button" class="btn btn-danger" id="remove_image_button">
+                                Remover Imagem Atual
+                            </button>';
+                            } else {
+                                echo '<p style="color: white; font-weight: bold;">Nenhuma imagem atualmente associada ao evento.</p>';
+                            }
+                            ?>
+                        </div>
+
                         <div class="form-group">
                             <button style="margin-top: 2vh;" type="submit" class="btn btn-primary">Guardar Alterações</button>
                         </div>
@@ -128,5 +165,38 @@ if (isset($_GET['event_id'])) {
 
     <?php include '../includes/footer.php'; ?>
 </body>
+
+<!-- Script para acionar a remoção da imagem -->
+<script>
+    document.getElementById('remove_image_button').addEventListener('click', function() {
+        if (confirm('Tem certeza de que deseja remover a imagem atual?')) {
+            // Adiciona um campo hidden para indicar a remoção da imagem
+            var removeImageField = document.createElement('input');
+            removeImageField.type = 'hidden';
+            removeImageField.name = 'remove_image';
+            removeImageField.value = '1';
+            document.querySelector('form').appendChild(removeImageField);
+
+            // Desativa o campo de seleção de nova imagem
+            document.getElementById('event_image').disabled = true;
+
+            // Opcional: Oculta o botão de remoção
+            this.style.display = 'none';
+            
+            // Atualiza a tabela event para remover o image_id
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Opcional: Adicione lógica adicional após a remoção bem-sucedida
+                    console.log("Imagem removida com sucesso");
+                    location.reload();
+                }
+            };
+            xhr.open("POST", "/eventos360/scripts/remove_event_image.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("event_id=<?php echo $event_id; ?>");
+        }
+    });
+</script>
 
 </html>
