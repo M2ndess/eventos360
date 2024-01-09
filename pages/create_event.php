@@ -33,9 +33,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Inserir o evento no banco de dados
     $sql_insert_event = "INSERT INTO event (name, description, date, location, user_id, category_id) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt_insert_event = $mysqli->prepare($sql_insert_event);
-    $stmt_insert_event->bind_param("ssssii", $eventName, $eventDescription, $eventDate, $eventLocation, $_SESSION['user_id'], $eventCategory);    
+    $stmt_insert_event->bind_param("ssssii", $eventName, $eventDescription, $eventDate, $eventLocation, $_SESSION['user_id'], $eventCategory);
 
     if ($stmt_insert_event->execute()) {
+        // Obter o ID do evento recém-inserido
+        $eventId = $stmt_insert_event->insert_id;
+
+        // Processar e salvar a imagem
+        if ($_FILES['event_image']['error'] == UPLOAD_ERR_OK) {
+            $imageTmpName = $_FILES['event_image']['tmp_name'];
+            $imageName = uniqid('event_image_') . '.' . pathinfo($_FILES['event_image']['name'], PATHINFO_EXTENSION);
+            $imageDestination = $_SERVER['DOCUMENT_ROOT'] . '/eventos360/uploads/' . $imageName;
+
+            if (move_uploaded_file($imageTmpName, $imageDestination)) {
+                // Inserir a informação da imagem no banco de dados
+                $sql_insert_image = "INSERT INTO images (url) VALUES (?)";
+                $stmt_insert_image = $mysqli->prepare($sql_insert_image);
+                $stmt_insert_image->bind_param("s", $imageName);
+                $stmt_insert_image->execute();
+
+                // Obter o ID da imagem recém-inserida
+                $imageId = $stmt_insert_image->insert_id;
+
+                // Atualizar a entrada do evento com o ID da imagem
+                $sql_update_event = "UPDATE event SET image_id = ? WHERE event_id = ?";
+                $stmt_update_event = $mysqli->prepare($sql_update_event);
+                $stmt_update_event->bind_param("ii", $imageId, $eventId);
+
+                // Execute a atualização do evento
+                $stmt_update_event->execute();
+                
+                // Fechar o statement de atualização
+                $stmt_update_event->close();
+
+                // Fechar o statement de inserção da imagem
+                $stmt_insert_image->close();
+            } else {
+                // Tratar erro no upload da imagem
+                $errorMessage = "Erro ao fazer upload da imagem.";
+                $_SESSION['error_message'] = $errorMessage;
+                header("Location: /eventos360/pages/create_event.php");
+                exit();
+            }
+        }
+
         // Evento criado com sucesso, redirecionar para a página de eventos
         header("Location: /eventos360/pages/event.php");
         exit();
@@ -81,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <!-- Botão para voltar -->
                     <a href="/eventos360/pages/event.php" class="btn btn-primary" style="margin-bottom: 2vh">Voltar</a>
                     <!-- Formulário de criação de eventos -->
-                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
                         <?php
                             if (isset($_SESSION['error_message'])) {
                                 echo '<p style="color: white; font-weight: bold;" class="error">' . $_SESSION['error_message'] . '</p>';
@@ -126,6 +167,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="form-group">
                                 <a style= "margin-top: 1vh;" href="/eventos360/pages/create_category.php" class="btn btn-success">Criar Nova Categoria</a>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label style="color: white; font-weight: bold; padding-top: 2vh;" for="event_image">Imagem do Evento</label>
+                            <input type="file" id="event_image" name="event_image" accept="image/*" class="form-control">
                         </div>
 
                         <div class="form-group">

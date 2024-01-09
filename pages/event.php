@@ -137,41 +137,81 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
                             $stmt_category_name->bind_result($categoryName);
                             $stmt_category_name->fetch();
                             $stmt_category_name->close();
+
+                            // Consulta SQL para obter a URL da imagem associada ao evento
+                            $sql_image_url = "SELECT url FROM images WHERE image_id = ?";
+                            $stmt_image_url = $mysqli->prepare($sql_image_url);
+                            $stmt_image_url->bind_param("i", $event['image_id']);
+                            $stmt_image_url->execute();
+                            $stmt_image_url->bind_result($imageUrl);
+                            $stmt_image_url->fetch();
+                            $stmt_image_url->close();
                         ?>
                         <div class="event">
                             <div class="event-details-box">
-                                <h3 class="text-white fw-bold"><?php echo "Nome: " . $event['name']; ?></h3>
-                                <p class="text-white fw-bold">Descrição: <?php echo $event['description']; ?></p>
-                                <p class="text-white fw-bold">Data: <?php echo $event['date']; ?></p>
-                                <p class="text-white fw-bold">Localização: <?php echo $event['location']; ?></p>
-                                <p class="text-white fw-bold">Categoria: <?php echo $categoryName; ?></p>
-                                
-                                <p class="text-white fw-bold">Participantes: <?php echo getParticipantsCount($event_id); ?></p>
+                                <div class="event-content">
+                                    <div class="event-text">
+                                        <h3 class="text-white fw-bold"><?php echo "Nome: " . $event['name']; ?></h3>
+                                        <p class="text-white fw-bold">Descrição: <?php echo $event['description']; ?></p>
+                                        <p class="text-white fw-bold">Data: <?php echo $event['date']; ?></p>
+                                        <p class="text-white fw-bold">Localização: <?php echo $event['location']; ?></p>
+                                        <p class="text-white fw-bold">Categoria: <?php echo $categoryName; ?></p>
+                                        
+                                        <p class="text-white fw-bold">Participantes: <?php echo getParticipantsCount($event_id); ?></p>
 
-                                <!-- Lista de colaboradores -->
-                                <?php
-                                // Consulta para obter colaboradores do evento
-                                $sql_collaborators = "SELECT user.username FROM user INNER JOIN event_users ON user.user_id = event_users.user_id WHERE event_users.event_id = ?";
-                                $stmt_collaborators = $mysqli->prepare($sql_collaborators);
-                                $stmt_collaborators->bind_param("i", $event_id);
-                                $stmt_collaborators->execute();
-                                $result_collaborators = $stmt_collaborators->get_result();
+                                        <!-- Lista de colaboradores -->
+                                        <?php
+                                        // Consulta para obter colaboradores do evento
+                                        $sql_collaborators = "SELECT user.username FROM user INNER JOIN event_users ON user.user_id = event_users.user_id WHERE event_users.event_id = ?";
+                                        $stmt_collaborators = $mysqli->prepare($sql_collaborators);
+                                        $stmt_collaborators->bind_param("i", $event_id);
+                                        $stmt_collaborators->execute();
+                                        $result_collaborators = $stmt_collaborators->get_result();
 
-                                // Array para armazenar os nomes dos colaboradores
-                                $collaborator_names = [];
+                                        // Array para armazenar os nomes dos colaboradores
+                                        $collaborator_names = [];
 
-                                while ($collaborator = $result_collaborators->fetch_assoc()) {
-                                    $collaborator_names[] = $collaborator['username'];
-                                }
+                                        while ($collaborator = $result_collaborators->fetch_assoc()) {
+                                            $collaborator_names[] = $collaborator['username'];
+                                        }
 
-                                // Feche o statement de colaboradores
-                                $stmt_collaborators->close();
+                                        // Feche o statement de colaboradores
+                                        $stmt_collaborators->close();
 
-                                // Exiba a lista de colaboradores apenas se houver algum
-                                if (!empty($collaborator_names)) {
-                                    echo '<p class="text-white fw-bold">Colaboradores: ' . implode(', ', $collaborator_names) . '</p>';
-                                }
-                                ?>
+                                        // Exiba a lista de colaboradores apenas se houver algum
+                                        if (!empty($collaborator_names)) {
+                                            echo '<p class="text-white fw-bold">Colaboradores: ' . implode(', ', $collaborator_names) . '</p>';
+                                        }
+                                        ?>
+                                    </div>
+
+                                    <div class="event-image-container">
+                                        <?php
+                                        // Verificar se o event tem uma imagem associada
+                                        if (!is_null($event['image_id'])) {
+                                            // Consulta SQL para obter a URL da imagem associada ao evento
+                                            $sql_image_url = "SELECT url FROM images WHERE image_id = ?";
+                                            $stmt_image_url = $mysqli->prepare($sql_image_url);
+                                            $stmt_image_url->bind_param("i", $event['image_id']);
+                                            $stmt_image_url->execute();
+                                            $stmt_image_url->bind_result($imageUrl);
+                                            $stmt_image_url->fetch();
+                                            $stmt_image_url->close();
+
+                                            // Exibir a imagem se houver uma URL válida
+                                            if (!empty($imageUrl)) {
+                                                echo '<img src="/eventos360/uploads/' . $imageUrl . '" alt="Evento Image" class="event-image">';
+                                            } else {
+                                                // Exibir uma mensagem ou um espaço reservado caso não haja imagem
+                                                echo '<p class="text-white fw-bold">Sem imagem disponível</p>';
+                                            }
+                                        } else {
+                                            // Exibir uma mensagem ou um espaço reservado caso não haja imagem
+                                            echo '<p class="text-white fw-bold">Sem imagem disponível</p>';
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
 
                                 <!-- Botão para participar ou cancelar participação no evento -->
                                 <form method="post" action="/eventos360/scripts/participate_event.php">

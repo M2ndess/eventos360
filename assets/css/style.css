@@ -269,6 +269,28 @@ color: var(--main-color);
     border-radius: 5px; /* Borda arredondada para um visual mais suave */
 }
 
+.event-content {
+    display: flex;
+    flex-wrap: wrap; 
+}
+
+.event-text {
+    flex: 1;
+    margin-right: 1vh;
+    margin-left: 3vh;
+    margin-top: 2vh;
+}
+
+.event-image-container {
+    flex-basis: 30%;
+    margin-top: 5vh;
+    margin-left: 1vh;
+}
+
+.event-image {
+    max-width: 85%;
+    height: auto;
+}
 
 /* Responsivo para ecrãs mais pequenos */
 @media (max-width: 768px) 
@@ -291,5 +313,24 @@ color: var(--main-color);
     .middle h1 
     {
         font-size: 2rem;
+    }
+
+    .event-content {
+        flex-direction: column-reverse;
+    }
+
+    .event-text {
+        margin-top: 2vh;
+        flex: 1;
+        margin-right: 3vh;
+    }
+
+    .event-image-container {
+        flex-basis: 30%;
+    }
+
+    .event-image {
+        width: 80%;
+        height: auto;
     }
 }
