@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 07-Jan-2024 às 19:33
--- Versão do servidor: 10.4.32-MariaDB
+-- Tempo de geração: 09-Jan-2024 às 22:39
+-- Versão do servidor: 11.3.0-MariaDB
 -- versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -39,9 +39,8 @@ CREATE TABLE `attendance` (
 --
 
 INSERT INTO `attendance` (`attendance_id`, `user_id`, `event_id`, `status`) VALUES
-(109, 17, 16, 'vou'),
-(110, 18, 16, 'vou'),
-(111, 18, 18, 'com_interesse');
+(116, 17, 40, 'nao_vou'),
+(117, 17, 39, 'vou');
 
 -- --------------------------------------------------------
 
@@ -55,6 +54,15 @@ CREATE TABLE `category` (
   `description` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Extraindo dados da tabela `category`
+--
+
+INSERT INTO `category` (`category_id`, `name`, `description`) VALUES
+(1, '1', 'teste'),
+(2, '2', 'desc'),
+(3, 'nome 1', 'desc 1');
+
 -- --------------------------------------------------------
 
 --
@@ -67,16 +75,20 @@ CREATE TABLE `event` (
   `description` varchar(200) NOT NULL,
   `date` date NOT NULL,
   `location` varchar(50) NOT NULL,
-  `user_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `image_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `event`
 --
 
-INSERT INTO `event` (`event_id`, `name`, `description`, `date`, `location`, `user_id`) VALUES
-(16, 'teste3', 'teste teste', '2025-11-11', 'viana do castelo', 17),
-(18, 'a', 'a', '2222-11-11', '1', 17);
+INSERT INTO `event` (`event_id`, `name`, `description`, `date`, `location`, `user_id`, `category_id`, `image_id`) VALUES
+(38, 'a', 'a', '2222-02-22', '22', 17, 1, 13),
+(39, 'a', 'a', '2222-02-22', '2', 17, 1, 14),
+(40, 'teste', 'desc teste', '2024-02-12', 'Viana', 17, 3, 15),
+(41, 'a', 'a', '2222-02-22', '2', 17, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -90,12 +102,25 @@ CREATE TABLE `event_users` (
   `event_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Extraindo dados da tabela `event_users`
+-- Estrutura da tabela `images`
 --
 
-INSERT INTO `event_users` (`event_user_id`, `user_id`, `event_id`) VALUES
-(22, 1, 16);
+CREATE TABLE `images` (
+  `image_id` int(11) NOT NULL,
+  `url` varchar(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `images`
+--
+
+INSERT INTO `images` (`image_id`, `url`) VALUES
+(13, 'event_image_659dba73a3300.jpg'),
+(14, 'event_image_659dba87a5daf.jpg'),
+(15, 'event_image_659dbb4cd1ad5.jpg');
 
 -- --------------------------------------------------------
 
@@ -171,7 +196,8 @@ ALTER TABLE `category`
 --
 ALTER TABLE `event`
   ADD PRIMARY KEY (`event_id`),
-  ADD KEY `user_id_fk_3` (`user_id`);
+  ADD KEY `user_id_fk_3` (`user_id`),
+  ADD KEY `image_id_fk` (`image_id`);
 
 --
 -- Índices para tabela `event_users`
@@ -180,6 +206,12 @@ ALTER TABLE `event_users`
   ADD PRIMARY KEY (`event_user_id`),
   ADD KEY `event_id_fk_3` (`event_id`),
   ADD KEY `user_id_fk_4` (`user_id`);
+
+--
+-- Índices para tabela `images`
+--
+ALTER TABLE `images`
+  ADD PRIMARY KEY (`image_id`);
 
 --
 -- Índices para tabela `invitation`
@@ -211,25 +243,31 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT de tabela `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `attendance_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `attendance_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 
 --
 -- AUTO_INCREMENT de tabela `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `event`
 --
 ALTER TABLE `event`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de tabela `event_users`
 --
 ALTER TABLE `event_users`
-  MODIFY `event_user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `event_user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT de tabela `images`
+--
+ALTER TABLE `images`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `invitation`
@@ -257,20 +295,20 @@ ALTER TABLE `user`
 -- Limitadores para a tabela `attendance`
 --
 ALTER TABLE `attendance`
-  ADD CONSTRAINT `event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`),
+  ADD CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 
 --
 -- Limitadores para a tabela `event`
 --
 ALTER TABLE `event`
-  ADD CONSTRAINT `user_id_fk_3` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
+  ADD CONSTRAINT `image_id_fk` FOREIGN KEY (`image_id`) REFERENCES `images` (`image_id`);
 
 --
 -- Limitadores para a tabela `event_users`
 --
 ALTER TABLE `event_users`
-  ADD CONSTRAINT `event_id_fk_3` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`),
+  ADD CONSTRAINT `event_users_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `user_id_fk_4` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 
 --
