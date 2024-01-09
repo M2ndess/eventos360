@@ -218,7 +218,7 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
 <script>
     function toggleFilters() {
         var filterBox = document.getElementById('filter-box');
-        var filterButton = document.getElementById('filter-button');
+        var filterButton = document.querySelector('.btn-primary');
 
         if (filterBox.style.display === 'none') {
             filterBox.style.display = 'block';
