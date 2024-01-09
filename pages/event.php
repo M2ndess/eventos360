@@ -125,6 +125,8 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
                                         <button type="submit" name="action" value="com_interesse" class="btn btn-info" <?php echo ($status === 'com_interesse') ? 'disabled' : ''; ?>>Com interesse</button>
                                     <?php endif; ?>
                                 </form>
+                                <!-- Botão de Partilha usando o ID do Evento -->
+                                <button style="margin-top: 1vh;" class="btn btn-secondary" onclick="shareEvent(<?php echo $event['event_id']; ?>)">Partilhar</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -135,5 +137,14 @@ $events = $result->fetch_all(MYSQLI_ASSOC);
 
     <?php include '../includes/footer.php'; ?>
 </body>
+
+<!-- JavaScript para partilha -->
+<script>
+    function shareEvent(eventId) {
+        var shareURL = 'http://localhost/eventos360/pages/shared_event.php?event_id=' + encodeURIComponent(eventId);
+        
+        window.open(shareURL, '_blank');
+    }
+</script>
 
 </html>

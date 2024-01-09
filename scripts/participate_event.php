@@ -7,6 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include 'connection.php';
 
     $event_id = $_POST["event_id"];
+    $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 
     // Certifique-se de verificar se $_SESSION['user_id'] está definida antes de usá-la
     $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
@@ -42,9 +43,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->close();
             }
         }
-    
-        header("Location: /eventos360/pages/event.php");
-        exit();
+
+        if (isset($referer)) {
+            if (stripos($referer, 'shared_event.php') !== false) {
+                // Redireciona para shared_event.php com o event_id
+                header("Location: /eventos360/pages/shared_event.php?event_id=$event_id");
+                exit();
+            } elseif (stripos($referer, 'event.php') !== false) {
+                header("Location: /eventos360/pages/event.php");
+                exit();
+            } else {
+                // Referência desconhecida, redirecionar para uma página padrão ou exibir mensagem de erro
+                header("Location: /eventos360/pages/error_page.php");
+                exit();
+            }
+        } else {
+            // Referência não está definida, redirecionar para uma página padrão ou exibir mensagem de erro
+            header("Location: /eventos360/pages/error_page.php");
+            exit();
+        }
     } else {
         // Lógica de tratamento se $_SESSION['user_id'] não estiver definida
         echo "Erro: User not found.";

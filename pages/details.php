@@ -94,7 +94,7 @@ $stmt_not_going_count->close();
                     <h1 class="text-white fw-bold display-3" style="text-align: center; margin-top: 20vh; transform: translateY(-50%);"><?php echo $event_data['name']; ?></h1>
                     <!-- Botão para voltar -->
                     <a href="/eventos360/pages/edit_event.php" class="btn btn-primary" style="margin-bottom: 2vh">Voltar</a>
-                    <p class="text-white"><?php echo $event_data['description']; ?></p>
+                    <p class="text-white">Descrição: <?php echo $event_data['description']; ?></p>
                     <p class="text-white">Data: <?php echo $event_data['date']; ?></p>
                     <p class="text-white">Localização: <?php echo $event_data['location']; ?></p>
                     <p class="text-white fw-bold">Vão: <?php echo $going_count_data['going_count']; ?></p>
