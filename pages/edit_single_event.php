@@ -87,7 +87,7 @@ if (isset($_GET['event_id'])) {
                     <!-- Botão para voltar -->
                     <a href="/eventos360/pages/edit_event.php" class="btn btn-primary" style="margin-bottom: 2vh">Voltar</a>
                     <!-- Formulário de edição de eventos -->
-                    <form method="post" action="/eventos360/scripts/edit_event.php">
+                    <form method="post" action="/eventos360/scripts/edit_event.php" enctype="multipart/form-data">
                         <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
 
                         <!-- Botão para adicionar colaborador -->
